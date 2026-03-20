@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Traductor LESHO</title>
+  <link rel="stylesheet" href="style.css" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#0b1220" />
+<link rel="apple-touch-icon" href="images/icon-192.png" />
+</head>
+<body>
+  <div class="app-container">
+    <header class="hero">
+      <div class="hero-badge">🇭🇳 Lenguaje de Señas Hondureño</div>
+      <h1>Traductor LESHO</h1>
+      <p>
+        Escribe cualquier palabra y mira su deletreo en el abecedario LESHO.
+      </p>
+    </header>
+
+    <main>
+      <!-- TRADUCTOR -->
+      <section class="glass-card translator-card">
+        <div class="input-group">
+          <input
+            type="text"
+            id="wordInput"
+            placeholder="Ejemplo: ABNER, HOLA, DEMODEX..."
+            maxlength="40"
+          />
+          <button id="translateBtn">Traducir</button>
+          <button id="clearBtn" class="secondary">Limpiar</button>
+        </div>
+
+        <div class="helper-row">
+          <p class="helper-text">
+            Soporta letras del abecedario LESHO incluyendo: CH, LL, Ñ y RR.
+          </p>
+          <button id="favoriteBtn" class="ghost-btn">⭐ Guardar favorita</button>
+        </div>
+      </section>
+
+      <!-- PALABRAS RÁPIDAS -->
+      <section class="quick-words-section">
+        <div class="section-title">
+          <h2>Palabras rápidas</h2>
+        </div>
+        <div id="quickWords" class="chips-container"></div>
+      </section>
+
+      <!-- TECLADO VISUAL -->
+      <section class="keyboard-section">
+        <div class="section-title">
+          <h2>Teclado visual LESHO</h2>
+        </div>
+        <div id="keyboardContainer" class="keyboard-grid"></div>
+      </section>
+
+      <!-- ZONA EXPORTABLE -->
+      <div id="exportArea">
+        <!-- RESULTADOS -->
+        <section class="result-section">
+          <div class="section-title">
+            <h2>Resultado del deletreo</h2>
+            <span id="resultCount">0 señas</span>
+          </div>
+
+          <div id="resultContainer" class="cards-grid">
+            <div class="empty-state">
+              <div class="empty-icon">✋</div>
+              <p>Escribe una palabra para ver sus señas en LESHO.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- BOTONES EXTRA -->
+      <section class="export-actions-section">
+        <div class="export-actions">
+          <button id="downloadBtn" class="download-btn">📥 Descargar resultado</button>
+        </div>
+      </section>
+
+      <!-- FAVORITOS -->
+      <section class="panel-section">
+        <div class="section-title action-title">
+          <h2>Favoritos</h2>
+          <button id="clearFavoritesBtn" class="small-danger-btn">🗑️ Limpiar favoritos</button>
+        </div>
+        <div id="favoritesContainer" class="panel-list"></div>
+      </section>
+
+      <!-- HISTORIAL -->
+      <section class="panel-section">
+        <div class="section-title action-title">
+          <h2>Historial</h2>
+          <button id="clearHistoryBtn" class="small-danger-btn">🗑️ Limpiar historial</button>
+        </div>
+        <div id="historyContainer" class="panel-list"></div>
+      </section>
+
+      <!-- CRÉDITOS -->
+      <section class="glass-card credits-card">
+        <div class="section-title">
+          <h2>Créditos y referencias</h2>
+        </div>
+
+        <div class="credits-block">
+          <p><strong>Proyecto desarrollado por:</strong></p>
+          <p>Abner Maldonado + ChatGPT</p>
+        </div>
+
+        <div class="credits-block">
+          <p><strong>Propósito:</strong></p>
+          <p>
+            Aplicación educativa gratuita para apoyar el aprendizaje del
+            abecedario LESHO (Lenguaje de Señas Hondureño).
+          </p>
+        </div>
+
+        <div class="credits-block">
+          <p><strong>Imágenes y recursos visuales:</strong></p>
+          <p>
+            Las imágenes utilizadas en esta versión pertenecen al material
+            seleccionado por el autor del proyecto. Si se usan referencias
+            externas, se recomienda agregar aquí la fuente correspondiente.
+          </p>
+        </div>
+
+        <p class="signature-line">✨ Hecho con cariño en Honduras por Abner & ChatGPT</p>
+      </section>
+    </main>
+
+    <!-- FOOTER PRO -->
+    <footer class="app-footer">
+      <p><strong>Traductor LESHO v4 Dios Mode</strong></p>
+      <p>🇭🇳 Proyecto educativo gratuito • Creado por Abner Maldonado + ChatGPT</p>
+    </footer>
+  </div>
+
+  <!-- MODAL IMAGEN -->
+  <div id="imageModal" class="modal hidden">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+      <button id="closeModalBtn" class="modal-close">✕</button>
+      <img id="modalImage" src="" alt="Vista ampliada de seña" />
+      <p id="modalCaption"></p>
+    </div>
+  </div>
+
+  <!-- Librería para exportar como imagen -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
