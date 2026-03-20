@@ -94,17 +94,19 @@ lesho-app/
 
 ---
 
-## 📸 Capturas recomendadas
+## 📸 Capturas del proyecto
 
-Puedes agregar aquí capturas del proyecto para mostrar:
+### 🏠 Pantalla principal
+![Pantalla principal](screenshots/screenshot-home.png)
 
-* Pantalla principal
-* Resultado de una palabra
-* Vista ampliada de seña
-* Versión instalada como app
+### 🔎 Resultado de traducción
+![Resultado de traducción](screenshots/screenshot-result.png)
 
-> Puedes arrastrar imágenes directamente a GitHub en el README para insertarlas fácilmente.
+### 🖼️ Vista ampliada de seña
+![Vista ampliada](screenshots/screenshot-modal.png)
 
+### 📱 Aplicación instalada (PWA)
+![Aplicación instalada](screenshots/screenshot-pwa.png)
 ---
 
 ## 💙 Créditos
