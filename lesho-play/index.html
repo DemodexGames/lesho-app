@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LESHO Play - Juegos Educativos</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-badge">HN Lenguaje de Señas Hondureño</div>
+      <h1>LESHO Play</h1>
+      <p>
+        Aprende el Lenguaje de Señas Hondureño jugando.
+        Explora minijuegos educativos y practica el abecedario LESHO.
+      </p>
+    </header>
+
+    <!-- =========================
+         MENÚ PRINCIPAL
+    ========================== -->
+    <section id="menuScreen" class="glass-card menu-card">
+  <div class="section-topbar">
+    <a href="../" class="secondary-btn back-home-link">⬅ Volver al Traductor</a>
+  </div>
+      <h2>🎮 Menú de Juegos</h2>
+      <p class="menu-subtitle">
+        Elige un minijuego para comenzar.
+      </p>
+
+      <div class="games-grid">
+        <button class="game-tile active" id="openQuizBtn">
+          <div class="game-icon">🧠</div>
+          <h3>Quiz de Letras</h3>
+          <p>Adivina qué letra representa cada seña.</p>
+          <span class="game-badge">Disponible</span>
+        </button>
+
+        <button class="game-tile active" id="openMemoryBtn">
+          <div class="game-icon">🃏</div>
+          <h3>Memorama LESHO</h3>
+          <p>Encuentra las parejas correctas entre señas y letras.</p>
+          <span class="game-badge">Disponible</span>
+        </button>
+
+        <button class="game-tile active" id="openWordBtn">
+          <div class="game-icon">✍️</div>
+          <h3>Escribe la palabra</h3>
+          <p>Forma palabras seleccionando las señas correctas.</p>
+          <span class="game-badge">Disponible</span>
+        </button>
+
+        <button class="game-tile active" id="openRushBtn">
+          <div class="game-icon">⚡</div>
+          <h3>Modo rápido</h3>
+          <p>Responde rápido antes de que se acabe el tiempo.</p>
+          <span class="game-badge">Disponible</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================
+         QUIZ - PANTALLA INICIAL
+    ========================== -->
+    <section id="startScreen" class="glass-card start-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromStart" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🧠 Quiz de Letras</h2>
+      <p>
+        Se mostrará una seña y tendrás que elegir la letra correcta entre 4 opciones.
+      </p>
+
+      <div class="rules-box">
+        <p>⏱️ 10 segundos por ronda</p>
+        <p>⭐ +10 puntos por respuesta correcta</p>
+        <p>🔥 La racha aumenta si aciertas seguidas</p>
+        <p>🎯 10 rondas por partida</p>
+      </div>
+
+      <button id="startBtn" class="primary-btn">▶ Empezar a jugar</button>
+    </section>
+
+    <!-- =========================
+         QUIZ - JUEGO
+    ========================== -->
+    <section id="gameScreen" class="glass-card game-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromGame" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <div class="top-stats">
+        <div class="stat-box">
+          <span class="label">Puntos</span>
+          <strong id="scoreValue">0</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Racha</span>
+          <strong id="streakValue">0</strong>
+        </div>
+
+        <div class="stat-box timer-box">
+          <span class="label">Tiempo</span>
+          <strong id="timerValue">10</strong>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <h2>¿Qué seña es esta?</h2>
+
+        <div class="question-crop-wrap">
+          <img id="questionImage" class="quiz-sign-image" src="" alt="Seña LESHO" />
+        </div>
+
+        <p class="round-text">
+          Ronda <span id="roundValue">1</span> de <span id="totalRoundsValue">10</span>
+        </p>
+      </div>
+
+      <div class="options-grid" id="optionsContainer"></div>
+
+      <div id="feedbackMessage" class="feedback-message"></div>
+    </section>
+
+    <!-- =========================
+         QUIZ - FINAL
+    ========================== -->
+    <section id="endScreen" class="glass-card end-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromEnd" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🏆 Partida terminada</h2>
+
+      <div class="final-stats">
+        <div class="final-box">
+          <span>Puntaje final</span>
+          <strong id="finalScore">0</strong>
+        </div>
+
+        <div class="final-box">
+          <span>Mejor racha</span>
+          <strong id="finalStreak">0</strong>
+        </div>
+      </div>
+
+      <p id="finalMessage" class="final-message">
+        ¡Buen trabajo! Sigue practicando para dominar el abecedario LESHO.
+      </p>
+
+      <div class="end-actions">
+        <button id="restartBtn" class="primary-btn">🔁 Jugar otra vez</button>
+      </div>
+    </section>
+
+    <!-- =========================
+         MEMORAMA - PANTALLA INICIAL
+    ========================== -->
+    <section id="memoryStartScreen" class="glass-card start-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromMemoryStart" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🃏 Memorama LESHO</h2>
+      <p>
+        Encuentra las parejas correctas entre la imagen de la seña y la letra correspondiente.
+      </p>
+
+      <div class="rules-box">
+        <p>🧩 6 pares por partida</p>
+        <p>🔄 Se cuentan tus movimientos</p>
+        <p>⏱️ El tiempo corre hasta completar todo</p>
+        <p>🎯 Ideal para memorizar señas + letras</p>
+      </div>
+
+      <button id="startMemoryBtn" class="primary-btn">▶ Empezar memorama</button>
+    </section>
+
+    <!-- =========================
+         MEMORAMA - JUEGO
+    ========================== -->
+    <section id="memoryGameScreen" class="glass-card game-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromMemoryGame" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <div class="top-stats memory-stats">
+        <div class="stat-box">
+          <span class="label">Movimientos</span>
+          <strong id="memoryMovesValue">0</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Pares</span>
+          <strong><span id="memoryPairsValue">0</span>/6</strong>
+        </div>
+
+        <div class="stat-box timer-box">
+          <span class="label">Tiempo</span>
+          <strong id="memoryTimerValue">0</strong>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <h2>Encuentra las parejas</h2>
+        <p class="round-text">Toca dos cartas para revelar su contenido.</p>
+      </div>
+
+      <div id="memoryBoard" class="memory-board"></div>
+
+      <div id="memoryFeedback" class="feedback-message"></div>
+    </section>
+
+    <!-- =========================
+         MEMORAMA - FINAL
+    ========================== -->
+    <section id="memoryEndScreen" class="glass-card end-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromMemoryEnd" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🏆 Memorama completado</h2>
+
+      <div class="final-stats">
+        <div class="final-box">
+          <span>Movimientos</span>
+          <strong id="memoryFinalMoves">0</strong>
+        </div>
+
+        <div class="final-box">
+          <span>Tiempo total</span>
+          <strong id="memoryFinalTime">0s</strong>
+        </div>
+      </div>
+
+      <p id="memoryFinalMessage" class="final-message">
+        ¡Excelente memoria! Sigue practicando LESHO.
+      </p>
+
+      <div class="end-actions">
+        <button id="restartMemoryBtn" class="primary-btn">🔁 Jugar otra vez</button>
+      </div>
+    </section>
+
+    <!-- =========================
+         ESCRIBE LA PALABRA - PANTALLA INICIAL
+    ========================== -->
+    <section id="wordStartScreen" class="glass-card start-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromWordStart" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>✍️ Escribe la palabra</h2>
+      <p>
+        Observa la palabra objetivo y constrúyela seleccionando las señas correctas.
+      </p>
+
+      <div class="rules-box">
+        <p>🧠 5 palabras por partida</p>
+        <p>⭐ +20 puntos por palabra correcta</p>
+        <p>🖼️ Selecciona señas, no letras normales</p>
+        <p>🎯 Aprende formando palabras reales en LESHO</p>
+      </div>
+
+      <button id="startWordBtn" class="primary-btn">▶ Empezar</button>
+    </section>
+
+    <!-- =========================
+         ESCRIBE LA PALABRA - JUEGO
+    ========================== -->
+    <section id="wordGameScreen" class="glass-card game-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromWordGame" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <div class="top-stats">
+        <div class="stat-box">
+          <span class="label">Puntos</span>
+          <strong id="wordScoreValue">0</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Palabra</span>
+          <strong><span id="wordRoundValue">1</span>/5</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Aciertos</span>
+          <strong id="wordCorrectValue">0</strong>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <h2>Forma esta palabra</h2>
+        <p class="word-target-label">Objetivo:</p>
+        <div id="wordTargetDisplay" class="word-target-display">HOLA</div>
+
+        <p class="word-answer-label">Tu respuesta (señas elegidas):</p>
+        <div id="wordAnswerDisplay" class="word-answer-signs"></div>
+      </div>
+
+      <div id="wordLetterPool" class="word-sign-pool"></div>
+
+      <div class="word-actions">
+        <button id="wordClearBtn" class="secondary-btn">⌫ Borrar</button>
+        <button id="wordCheckBtn" class="primary-btn">✅ Comprobar</button>
+      </div>
+
+      <div id="wordFeedback" class="feedback-message"></div>
+    </section>
+
+    <!-- =========================
+         ESCRIBE LA PALABRA - FINAL
+    ========================== -->
+    <section id="wordEndScreen" class="glass-card end-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromWordEnd" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🏆 Partida terminada</h2>
+
+      <div class="final-stats">
+        <div class="final-box">
+          <span>Puntaje final</span>
+          <strong id="wordFinalScore">0</strong>
+        </div>
+
+        <div class="final-box">
+          <span>Palabras correctas</span>
+          <strong id="wordFinalCorrect">0</strong>
+        </div>
+      </div>
+
+      <p id="wordFinalMessage" class="final-message">
+        ¡Excelente trabajo construyendo palabras!
+      </p>
+
+      <div class="end-actions">
+        <button id="restartWordBtn" class="primary-btn">🔁 Jugar otra vez</button>
+      </div>
+    </section>
+
+    <!-- =========================
+         MODO RÁPIDO - PANTALLA INICIAL
+    ========================== -->
+    <section id="rushStartScreen" class="glass-card start-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromRushStart" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>⚡ Modo rápido</h2>
+      <p>
+        Responde lo más rápido posible. Si fallas o se acaba el tiempo, termina la partida.
+      </p>
+
+      <div class="rules-box">
+        <p>⏱️ 5 segundos por pregunta</p>
+        <p>⭐ +10 puntos por acierto</p>
+        <p>❌ Si fallas, termina</p>
+        <p>🔥 Intenta romper tu récord</p>
+      </div>
+
+      <button id="startRushBtn" class="primary-btn">▶ Empezar</button>
+    </section>
+
+    <!-- =========================
+         MODO RÁPIDO - JUEGO
+    ========================== -->
+    <section id="rushGameScreen" class="glass-card game-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromRushGame" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <div class="top-stats">
+        <div class="stat-box">
+          <span class="label">Puntos</span>
+          <strong id="rushScoreValue">0</strong>
+        </div>
+
+        <div class="stat-box">
+          <span class="label">Aciertos</span>
+          <strong id="rushCorrectValue">0</strong>
+        </div>
+
+        <div class="stat-box timer-box">
+          <span class="label">Tiempo</span>
+          <strong id="rushTimerValue">5</strong>
+        </div>
+      </div>
+
+      <div class="question-card">
+        <h2>¡Responde rápido!</h2>
+
+        <div class="question-crop-wrap">
+          <img id="rushQuestionImage" class="quiz-sign-image" src="" alt="Seña LESHO" />
+        </div>
+      </div>
+
+      <div class="options-grid" id="rushOptionsContainer"></div>
+
+      <div id="rushFeedback" class="feedback-message"></div>
+    </section>
+
+    <!-- =========================
+         MODO RÁPIDO - FINAL
+    ========================== -->
+    <section id="rushEndScreen" class="glass-card end-card hidden">
+      <div class="section-topbar">
+        <button id="backToMenuFromRushEnd" class="secondary-btn">⬅ Volver al menú</button>
+      </div>
+
+      <h2>🏆 Modo rápido terminado</h2>
+
+      <div class="final-stats">
+        <div class="final-box">
+          <span>Puntaje final</span>
+          <strong id="rushFinalScore">0</strong>
+        </div>
+
+        <div class="final-box">
+          <span>Aciertos</span>
+          <strong id="rushFinalCorrect">0</strong>
+        </div>
+      </div>
+
+      <p id="rushFinalMessage" class="final-message">
+        ¡Buen intento! Sigue practicando para mejorar tu récord.
+      </p>
+
+      <div class="end-actions">
+        <button id="restartRushBtn" class="primary-btn">🔁 Jugar otra vez</button>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p>Hecho con 💙 por <strong>Abner / Demodex Games</strong> + <strong>ChatGPT</strong></p>
+    </footer>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
