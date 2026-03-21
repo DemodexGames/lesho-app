@@ -5,24 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Traductor LESHO</title>
   <link rel="stylesheet" href="style.css" />
-<link rel="manifest" href="manifest.json" />
-<meta name="theme-color" content="#0b1220" />
-<link rel="apple-touch-icon" href="images/icon-192.png" />
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="apple-touch-icon" href="images/icon-192.png" />
 </head>
 <body>
-  <header class="hero">
-  <div class="hero-badge">HN Lenguaje de Señas Hondureño</div>
-  <h1>Traductor LESHO</h1>
-  <p>Escribe cualquier palabra y mira su deletreo en el abecedario LESHO.</p>
+  <div class="app-container">
+    <header class="hero">
+      <div class="hero-badge">HN Lenguaje de Señas Hondureño</div>
+      <h1>Traductor LESHO</h1>
+      <p>Escribe cualquier palabra y mira su deletreo en el abecedario LESHO.</p>
 
-  <div class="hub-actions">
-    <a href="./lesho-play/" class="hub-btn play-link-btn">🎮 Ir a LESHO Play</a>
-  </div>
-</header>
+      <div class="hub-actions">
+        <a href="./lesho-play/" class="hub-btn play-link-btn">🎮 Ir a LESHO Play</a>
+      </div>
+    </header>
 
     <main>
       <!-- TRADUCTOR -->
-      <section class="glass-card translator-card">
+     <section class="glass-card translator-card sticky-translator">
         <div class="input-group">
           <input
             type="text"
@@ -61,7 +62,7 @@
       <!-- ZONA EXPORTABLE -->
       <div id="exportArea">
         <!-- RESULTADOS -->
-        <section class="result-section">
+        <section id="resultSection" class="result-section">
           <div class="section-title">
             <h2>Resultado del deletreo</h2>
             <span id="resultCount">0 señas</span>

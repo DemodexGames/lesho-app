@@ -11,6 +11,7 @@ const downloadBtn = document.getElementById("downloadBtn");
 
 const resultContainer = document.getElementById("resultContainer");
 const resultCount = document.getElementById("resultCount");
+const resultSection = document.getElementById("resultSection");
 const keyboardContainer = document.getElementById("keyboardContainer");
 const quickWordsContainer = document.getElementById("quickWords");
 const favoritesContainer = document.getElementById("favoritesContainer");
@@ -113,6 +114,17 @@ function findSign(token) {
   return signData.find(item => item.letter === token);
 }
 
+function scrollToResults() {
+  if (!resultSection) return;
+
+  setTimeout(() => {
+    resultSection.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }, 120);
+}
+
 function renderResults(word) {
   const cleanedWord = normalizeText(word);
   const tokens = tokenizeLESHO(cleanedWord);
@@ -181,6 +193,7 @@ function renderResults(word) {
   resultCount.textContent = `${tokens.length} seña${tokens.length !== 1 ? "s" : ""}`;
   renderHistory();
   bindImageZoom();
+  scrollToResults();
 }
 
 function bindImageZoom() {
@@ -423,6 +436,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 loadData();
+
 // Registrar Service Worker para PWA
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {

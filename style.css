@@ -22,6 +22,10 @@
   padding: 0;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background:
@@ -87,10 +91,12 @@ body {
   display: grid;
   grid-template-columns: 1fr auto auto;
   gap: 12px;
+  align-items: stretch;
 }
 
 .input-group input {
   width: 100%;
+  min-width: 0;
   padding: 16px 18px;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -205,6 +211,7 @@ button.secondary:hover {
 .result-section,
 .panel-section {
   margin-bottom: 24px;
+  scroll-margin-top: 18px;
 }
 
 .chips-container,
@@ -451,35 +458,6 @@ button.secondary:hover {
   }
 }
 
-@media (max-width: 768px) {
-  .input-group {
-    grid-template-columns: 1fr;
-  }
-
-  button {
-    width: 100%;
-  }
-
-  .section-title {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .helper-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .small-danger-btn {
-    width: 100%;
-  }
-
-  .modal-content {
-    margin: 8vh auto;
-    width: 92vw;
-  }
-}
-
 /* ===== VERSION 4: DESCARGA DE RESULTADO ===== */
 
 #exportArea {
@@ -557,15 +535,6 @@ button.secondary:hover {
   font-size: 0.92rem;
 }
 
-@media (max-width: 768px) {
-  .export-actions {
-    justify-content: stretch;
-  }
-
-  .download-btn {
-    width: 100%;
-  }
-}
 /* =========================
    BOTÓN A LESHO PLAY
 ========================= */
@@ -600,4 +569,604 @@ button.secondary:hover {
 .play-link-btn:hover {
   transform: translateY(-2px);
   filter: brightness(1.05);
+}
+
+/* =========================
+   RESPONSIVE PRO (TABLET)
+========================= */
+@media (max-width: 900px) {
+  body {
+    padding: 18px;
+  }
+
+  .hero {
+    margin-bottom: 22px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.1rem, 9vw, 4rem);
+  }
+
+  .hero p {
+    font-size: 0.98rem;
+    padding: 0 6px;
+  }
+
+  .translator-card,
+  .credits-card {
+    padding: 18px;
+  }
+
+  .input-group {
+    grid-template-columns: 1fr;
+  }
+
+  .input-group button {
+    width: 100%;
+  }
+
+  .helper-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ghost-btn {
+    width: 100%;
+  }
+
+  .section-title {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .small-danger-btn {
+    width: 100%;
+  }
+
+  .export-actions {
+    justify-content: stretch;
+  }
+
+  .download-btn {
+    width: 100%;
+  }
+
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+
+  .modal-content {
+    margin: 8vh auto;
+    width: 92vw;
+  }
+}
+
+/* =========================
+   RESPONSIVE PRO (MÓVIL)
+========================= */
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .app-container {
+    max-width: 100%;
+  }
+
+  .hero {
+    margin-bottom: 18px;
+  }
+
+  .hero-badge {
+    font-size: 0.82rem;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+  }
+
+  .hero h1 {
+    font-size: clamp(2rem, 12vw, 3rem);
+    margin-bottom: 10px;
+  }
+
+  .hero p {
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+
+  .hub-actions {
+    margin-top: 14px;
+  }
+
+  .hub-btn {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 18px;
+  }
+
+  .glass-card {
+    border-radius: 20px;
+  }
+
+  .translator-card,
+  .credits-card {
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+
+  .input-group {
+    gap: 10px;
+  }
+
+  .input-group input {
+    font-size: 16px; /* evita zoom raro en iPhone */
+    padding: 14px 14px;
+    border-radius: 14px;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .helper-row {
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .helper-text {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .section-title {
+    margin-bottom: 12px;
+    gap: 8px;
+  }
+
+  .section-title h2 {
+    font-size: 1.12rem;
+  }
+
+  .section-title span {
+    font-size: 0.9rem;
+  }
+
+  .quick-words-section,
+  .keyboard-section,
+  .result-section,
+  .panel-section {
+    margin-bottom: 18px;
+  }
+
+  .chips-container,
+  .panel-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .chip,
+  .panel-item {
+    width: 100%;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+
+  .keyboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .key-btn {
+    padding: 12px 6px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+  }
+
+  #exportArea {
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .sign-card {
+    border-radius: 18px;
+  }
+
+  .sign-card .card-top {
+    padding: 14px;
+  }
+
+  .sign-card .card-letter {
+    font-size: 1.7rem;
+  }
+
+  .sign-card .card-type {
+    font-size: 0.85rem;
+  }
+
+  .sign-card .card-body {
+    padding: 14px;
+  }
+
+  .sign-card .card-body p {
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .sign-card .card-body img {
+    border-radius: 14px;
+  }
+
+  .empty-state {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .result-section .empty-state {
+    padding: 28px 16px;
+    border-radius: 18px;
+  }
+
+  .empty-icon {
+    font-size: 2.3rem;
+    margin-bottom: 8px;
+  }
+
+  .export-header {
+    padding: 4px 4px 14px;
+  }
+
+  .export-badge {
+    font-size: 0.76rem;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+  }
+
+  .export-header h3 {
+    font-size: clamp(1.3rem, 7vw, 1.8rem);
+  }
+
+  .export-header p {
+    font-size: 0.88rem;
+  }
+
+  .export-footer p {
+    font-size: 0.85rem;
+  }
+
+  .credits-card p {
+    font-size: 0.92rem;
+  }
+
+  .signature-line {
+    font-size: 0.92rem;
+  }
+
+  .app-footer {
+    margin-top: 20px;
+    padding: 16px 10px;
+  }
+
+  .app-footer p {
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+
+  .app-footer p:first-child {
+    font-size: 0.95rem;
+  }
+
+  .modal-content {
+    padding: 14px;
+    border-radius: 18px;
+    margin: 6vh auto;
+  }
+
+  .modal-content img {
+    border-radius: 14px;
+  }
+
+  .modal-content p {
+    font-size: 0.9rem;
+  }
+
+  .modal-close {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
+  }
+}
+
+/* =========================
+   MÓVIL PEQUEÑITO
+========================= */
+@media (max-width: 420px) {
+  .keyboard-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .chips-container,
+  .panel-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 11vw, 2.5rem);
+  }
+}
+/* =========================
+   RETOQUE PREMIUM FINAL MÓVIL
+========================= */
+@media (max-width: 600px) {
+  /* HERO más compacto */
+  .hero {
+    margin-bottom: 14px;
+  }
+
+  .hero-badge {
+    font-size: 0.78rem;
+    padding: 7px 11px;
+    margin-bottom: 10px;
+  }
+
+  .hero h1 {
+    font-size: clamp(1.8rem, 10vw, 2.6rem);
+    line-height: 1.05;
+    margin-bottom: 8px;
+  }
+
+  .hero p {
+    font-size: 0.9rem;
+    line-height: 1.35;
+    max-width: 92%;
+    margin: 0 auto;
+  }
+
+  .hub-actions {
+    margin-top: 12px;
+    margin-bottom: 4px;
+  }
+
+  .hub-btn {
+    max-width: 260px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    border-radius: 14px;
+  }
+
+  /* Card principal más tipo app */
+  .translator-card {
+    padding: 12px;
+    margin-bottom: 16px;
+    border-radius: 18px;
+  }
+
+  .input-group {
+    gap: 8px;
+  }
+
+  .input-group input {
+    padding: 13px 14px;
+    border-radius: 13px;
+    font-size: 15px;
+  }
+
+  #translateBtn,
+  #clearBtn {
+    padding: 13px 14px;
+    font-size: 0.95rem;
+    border-radius: 13px;
+  }
+
+  .helper-row {
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .helper-text {
+    font-size: 0.82rem;
+    line-height: 1.35;
+    color: #b9c8dc;
+  }
+
+  #favoriteBtn {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    border-radius: 13px;
+  }
+
+  /* Títulos de sección un poco más finos */
+  .section-title h2 {
+    font-size: 1.05rem;
+  }
+
+  .section-title span {
+    font-size: 0.85rem;
+  }
+
+  /* Palabras rápidas más bonitas */
+  .chips-container {
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 11px 8px;
+    font-size: 0.88rem;
+    font-weight: 800;
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.05));
+  }
+
+  /* Teclado visual más compacto */
+  .keyboard-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .key-btn {
+    padding: 11px 4px;
+    min-height: 46px;
+    font-size: 0.9rem;
+    border-radius: 11px;
+  }
+
+  /* Resultados más limpios */
+  #exportArea {
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  .cards-grid {
+    gap: 10px;
+  }
+
+  .sign-card {
+    border-radius: 16px;
+  }
+
+  .sign-card .card-top {
+    padding: 12px;
+  }
+
+  .sign-card .card-letter {
+    font-size: 1.5rem;
+  }
+
+  .sign-card .card-type {
+    font-size: 0.8rem;
+  }
+
+  .sign-card .card-body {
+    padding: 12px;
+  }
+
+  .sign-card .card-body p {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+
+  .sign-card .card-body img {
+    border-radius: 12px;
+  }
+
+  /* Favoritos / historial más ordenados */
+  .panel-list {
+    gap: 8px;
+  }
+
+  .panel-item {
+    padding: 11px 8px;
+    font-size: 0.88rem;
+    border-radius: 12px;
+  }
+
+  .small-danger-btn {
+    padding: 11px 12px;
+    font-size: 0.82rem;
+    border-radius: 12px;
+  }
+
+  /* Footer más compacto */
+  .app-footer {
+    margin-top: 16px;
+    padding: 14px 8px;
+  }
+
+  .app-footer p {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  .app-footer p:first-child {
+    font-size: 0.9rem;
+  }
+}
+/* =========================
+   STICKY HEADER MÓVIL GOD MODE
+========================= */
+@media (max-width: 600px) {
+  .sticky-translator {
+    position: sticky;
+    top: 10px;
+    z-index: 80;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow:
+      0 12px 28px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(56, 189, 248, 0.04);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  /* separa mejor del contenido cuando se queda pegado */
+  .sticky-translator + .quick-words-section {
+    margin-top: 18px;
+  }
+
+  /* compactar un poquito más para sticky */
+  .sticky-translator .input-group {
+    gap: 8px;
+  }
+
+  .sticky-translator .input-group input {
+    min-height: 48px;
+  }
+
+  .sticky-translator #translateBtn,
+  .sticky-translator #clearBtn,
+  .sticky-translator #favoriteBtn {
+    min-height: 46px;
+  }
+
+  /* cuando haces scroll, que las secciones no queden escondidas detrás */
+  .quick-words-section,
+  .keyboard-section,
+  .result-section,
+  .panel-section {
+    scroll-margin-top: 190px;
+  }
+
+  /* mejora visual de stacking en móviles */
+  .sticky-translator::after {
+    content: "";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: -10px;
+    height: 14px;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgba(11,18,32,0.18), rgba(11,18,32,0));
+    border-radius: 0 0 18px 18px;
+  }
+}
+
+/* tablet pequeña también se beneficia */
+@media (min-width: 601px) and (max-width: 900px) {
+  .sticky-translator {
+    position: sticky;
+    top: 12px;
+    z-index: 60;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  }
+
+  .quick-words-section,
+  .keyboard-section,
+  .result-section,
+  .panel-section {
+    scroll-margin-top: 170px;
+  }
 }
