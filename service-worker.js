@@ -1,4 +1,4 @@
-const CACHE_NAME = "lesho-cache-v1";
+const CACHE_NAME = "lesho-app-v3";
 
 const urlsToCache = [
   "./",
