@@ -1,4 +1,4 @@
-const CACHE_NAME = "lesho-cache-v3";
+const CACHE_NAME = "lesho-cache-v1";
 
 const urlsToCache = [
   "./",
@@ -6,9 +6,7 @@ const urlsToCache = [
   "./style.css",
   "./app.js",
   "./data.json",
-  "./manifest.json",
-  "./images/icon-192.png",
-  "./images/icon-512.png"
+  "./manifest.json"
 ];
 
 self.addEventListener("install", (event) => {

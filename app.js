@@ -1,1032 +1,437 @@
-const quizData = [
-  { letter: "A", image: "images/a.jpg" },
-  { letter: "B", image: "images/b.jpg" },
-  { letter: "C", image: "images/c.jpg" },
-  { letter: "CH", image: "images/ch.jpg" },
-  { letter: "D", image: "images/d.jpg" },
-  { letter: "E", image: "images/e.jpg" },
-  { letter: "F", image: "images/f.jpg" },
-  { letter: "G", image: "images/g.jpg" },
-  { letter: "H", image: "images/h.jpg" },
-  { letter: "I", image: "images/i.jpg" },
-  { letter: "J", image: "images/j.jpg" },
-  { letter: "K", image: "images/k.jpg" },
-  { letter: "L", image: "images/l.jpg" },
-  { letter: "LL", image: "images/ll.jpg" },
-  { letter: "M", image: "images/m.jpg" },
-  { letter: "N", image: "images/n.jpg" },
-  { letter: "Ñ", image: "images/enye.jpg" },
-  { letter: "O", image: "images/o.jpg" },
-  { letter: "P", image: "images/p.jpg" },
-  { letter: "Q", image: "images/q.jpg" },
-  { letter: "R", image: "images/r.jpg" },
-  { letter: "RR", image: "images/rr.jpg" },
-  { letter: "S", image: "images/s.jpg" },
-  { letter: "T", image: "images/t.jpg" },
-  { letter: "U", image: "images/u.jpg" },
-  { letter: "V", image: "images/v.jpg" },
-  { letter: "W", image: "images/w.jpg" },
-  { letter: "X", image: "images/x.jpg" },
-  { letter: "Y", image: "images/y.jpg" },
-  { letter: "Z", image: "images/z.jpg" }
-];
+let signData = [];
+let lastTranslatedWord = "";
 
-const wordBank = [
+const wordInput = document.getElementById("wordInput");
+const translateBtn = document.getElementById("translateBtn");
+const clearBtn = document.getElementById("clearBtn");
+const favoriteBtn = document.getElementById("favoriteBtn");
+const clearFavoritesBtn = document.getElementById("clearFavoritesBtn");
+const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+
+const resultContainer = document.getElementById("resultContainer");
+const resultCount = document.getElementById("resultCount");
+const keyboardContainer = document.getElementById("keyboardContainer");
+const quickWordsContainer = document.getElementById("quickWords");
+const favoritesContainer = document.getElementById("favoritesContainer");
+const historyContainer = document.getElementById("historyContainer");
+const exportArea = document.getElementById("exportArea");
+
+const imageModal = document.getElementById("imageModal");
+const modalOverlay = document.getElementById("modalOverlay");
+const closeModalBtn = document.getElementById("closeModalBtn");
+const modalImage = document.getElementById("modalImage");
+const modalCaption = document.getElementById("modalCaption");
+
+const STORAGE_KEYS = {
+  favorites: "lesho_favorites",
+  history: "lesho_history"
+};
+
+const quickWords = [
   "HOLA",
+  "ABNER",
   "AMOR",
-  "CASA",
-  "MAMA",
-  "PAPA",
-  "LUZ",
-  "SOL",
-  "LUNA",
-  "MANO",
-  "OSO",
-  "GATO",
-  "PERRO",
-  "FLOR",
-  "RIO",
-  "NUBE"
+  "MAMÁ",
+  "PAPÁ",
+  "GRACIAS",
+  "FAMILIA",
+  "ESCUELA",
+  "HONDURAS",
+  "ÑANDU"
 ];
 
-/* =========================
-   CONFIG
-========================= */
-const TOTAL_ROUNDS = 10;
-const TIME_PER_ROUND = 10;
-const MEMORY_PAIRS = 6;
-const WORD_ROUNDS = 5;
-const RUSH_TIME = 5;
+const keyboardLetters = [
+  "A", "B", "C", "CH", "D", "E", "F", "G", "H", "I",
+  "J", "K", "L", "LL", "M", "N", "Ñ", "O", "P", "Q",
+  "R", "RR", "S", "T", "U", "V", "W", "X", "Y", "Z"
+];
 
-/* =========================
-   ELEMENTOS - MENU / QUIZ
-========================= */
-const menuScreen = document.getElementById("menuScreen");
-const startScreen = document.getElementById("startScreen");
-const gameScreen = document.getElementById("gameScreen");
-const endScreen = document.getElementById("endScreen");
-
-const openQuizBtn = document.getElementById("openQuizBtn");
-const openMemoryBtn = document.getElementById("openMemoryBtn");
-const openWordBtn = document.getElementById("openWordBtn");
-const openRushBtn = document.getElementById("openRushBtn");
-
-const backToMenuFromStart = document.getElementById("backToMenuFromStart");
-const backToMenuFromGame = document.getElementById("backToMenuFromGame");
-const backToMenuFromEnd = document.getElementById("backToMenuFromEnd");
-
-const startBtn = document.getElementById("startBtn");
-const restartBtn = document.getElementById("restartBtn");
-
-const scoreValue = document.getElementById("scoreValue");
-const streakValue = document.getElementById("streakValue");
-const timerValue = document.getElementById("timerValue");
-const roundValue = document.getElementById("roundValue");
-const totalRoundsValue = document.getElementById("totalRoundsValue");
-
-const questionImage = document.getElementById("questionImage");
-const optionsContainer = document.getElementById("optionsContainer");
-const feedbackMessage = document.getElementById("feedbackMessage");
-
-const finalScore = document.getElementById("finalScore");
-const finalStreak = document.getElementById("finalStreak");
-const finalMessage = document.getElementById("finalMessage");
-
-/* =========================
-   ELEMENTOS - MEMORAMA
-========================= */
-const memoryStartScreen = document.getElementById("memoryStartScreen");
-const memoryGameScreen = document.getElementById("memoryGameScreen");
-const memoryEndScreen = document.getElementById("memoryEndScreen");
-
-const backToMenuFromMemoryStart = document.getElementById("backToMenuFromMemoryStart");
-const backToMenuFromMemoryGame = document.getElementById("backToMenuFromMemoryGame");
-const backToMenuFromMemoryEnd = document.getElementById("backToMenuFromMemoryEnd");
-
-const startMemoryBtn = document.getElementById("startMemoryBtn");
-const restartMemoryBtn = document.getElementById("restartMemoryBtn");
-
-const memoryBoard = document.getElementById("memoryBoard");
-const memoryMovesValue = document.getElementById("memoryMovesValue");
-const memoryPairsValue = document.getElementById("memoryPairsValue");
-const memoryTimerValue = document.getElementById("memoryTimerValue");
-const memoryFeedback = document.getElementById("memoryFeedback");
-
-const memoryFinalMoves = document.getElementById("memoryFinalMoves");
-const memoryFinalTime = document.getElementById("memoryFinalTime");
-const memoryFinalMessage = document.getElementById("memoryFinalMessage");
-
-/* =========================
-   ELEMENTOS - WORD
-========================= */
-const wordStartScreen = document.getElementById("wordStartScreen");
-const wordGameScreen = document.getElementById("wordGameScreen");
-const wordEndScreen = document.getElementById("wordEndScreen");
-
-const backToMenuFromWordStart = document.getElementById("backToMenuFromWordStart");
-const backToMenuFromWordGame = document.getElementById("backToMenuFromWordGame");
-const backToMenuFromWordEnd = document.getElementById("backToMenuFromWordEnd");
-
-const startWordBtn = document.getElementById("startWordBtn");
-const restartWordBtn = document.getElementById("restartWordBtn");
-
-const wordScoreValue = document.getElementById("wordScoreValue");
-const wordRoundValue = document.getElementById("wordRoundValue");
-const wordCorrectValue = document.getElementById("wordCorrectValue");
-const wordTargetDisplay = document.getElementById("wordTargetDisplay");
-const wordAnswerDisplay = document.getElementById("wordAnswerDisplay");
-const wordLetterPool = document.getElementById("wordLetterPool");
-const wordClearBtn = document.getElementById("wordClearBtn");
-const wordCheckBtn = document.getElementById("wordCheckBtn");
-const wordFeedback = document.getElementById("wordFeedback");
-
-const wordFinalScore = document.getElementById("wordFinalScore");
-const wordFinalCorrect = document.getElementById("wordFinalCorrect");
-const wordFinalMessage = document.getElementById("wordFinalMessage");
-
-/* =========================
-   ELEMENTOS - RUSH
-========================= */
-const rushStartScreen = document.getElementById("rushStartScreen");
-const rushGameScreen = document.getElementById("rushGameScreen");
-const rushEndScreen = document.getElementById("rushEndScreen");
-
-const backToMenuFromRushStart = document.getElementById("backToMenuFromRushStart");
-const backToMenuFromRushGame = document.getElementById("backToMenuFromRushGame");
-const backToMenuFromRushEnd = document.getElementById("backToMenuFromRushEnd");
-
-const startRushBtn = document.getElementById("startRushBtn");
-const restartRushBtn = document.getElementById("restartRushBtn");
-
-const rushScoreValue = document.getElementById("rushScoreValue");
-const rushCorrectValue = document.getElementById("rushCorrectValue");
-const rushTimerValue = document.getElementById("rushTimerValue");
-const rushQuestionImage = document.getElementById("rushQuestionImage");
-const rushOptionsContainer = document.getElementById("rushOptionsContainer");
-const rushFeedback = document.getElementById("rushFeedback");
-
-const rushFinalScore = document.getElementById("rushFinalScore");
-const rushFinalCorrect = document.getElementById("rushFinalCorrect");
-const rushFinalMessage = document.getElementById("rushFinalMessage");
-
-/* =========================
-   ESTADO - QUIZ
-========================= */
-let currentRound = 1;
-let score = 0;
-let streak = 0;
-let bestStreak = 0;
-let timeLeft = TIME_PER_ROUND;
-let timerInterval = null;
-let currentQuestion = null;
-let gamePool = [];
-let isAnswered = false;
-
-/* =========================
-   ESTADO - MEMORAMA
-========================= */
-let memoryDeck = [];
-let memoryFirstCard = null;
-let memorySecondCard = null;
-let memoryLock = false;
-let memoryMoves = 0;
-let memoryPairsFound = 0;
-let memorySeconds = 0;
-let memoryTimerInterval = null;
-
-/* =========================
-   ESTADO - WORD
-========================= */
-let wordGameWords = [];
-let wordRound = 1;
-let wordScore = 0;
-let wordCorrect = 0;
-let currentWord = "";
-let currentWordAnswer = [];
-let wordSelectedButtons = [];
-
-/* =========================
-   ESTADO - RUSH
-========================= */
-let rushScore = 0;
-let rushCorrect = 0;
-let rushTimeLeft = RUSH_TIME;
-let rushTimerInterval = null;
-let rushQuestion = null;
-let rushAnswered = false;
-
-/* =========================
-   HELPERS GENERALES
-========================= */
-function showScreen(screen) {
-  const allScreens = [
-    menuScreen,
-    startScreen,
-    gameScreen,
-    endScreen,
-    memoryStartScreen,
-    memoryGameScreen,
-    memoryEndScreen,
-    wordStartScreen,
-    wordGameScreen,
-    wordEndScreen,
-    rushStartScreen,
-    rushGameScreen,
-    rushEndScreen
-  ];
-
-  allScreens.forEach(s => s.classList.add("hidden"));
-  screen.classList.remove("hidden");
-}
-
-function shuffleArray(array) {
-  const arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function stopAllTimers() {
-  stopTimer();
-  stopMemoryTimer();
-  stopRushTimer();
-}
-
-function getLetterData(letter) {
-  return quizData.find(item => item.letter === letter);
-}
-
-/* =========================
-   HELPERS QUIZ
-========================= */
-function resetFeedback() {
-  feedbackMessage.textContent = "";
-  feedbackMessage.className = "feedback-message";
-}
-
-function updateStats() {
-  scoreValue.textContent = score;
-  streakValue.textContent = streak;
-  timerValue.textContent = timeLeft;
-  roundValue.textContent = currentRound;
-  totalRoundsValue.textContent = TOTAL_ROUNDS;
-}
-
-function stopTimer() {
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
+async function loadData() {
+  try {
+    const response = await fetch("data.json");
+    signData = await response.json();
+    renderQuickWords();
+    renderKeyboard();
+    renderFavorites();
+    renderHistory();
+  } catch (error) {
+    console.error("Error cargando data.json:", error);
+    showError("No se pudo cargar el archivo data.json");
   }
 }
 
-/* =========================
-   HELPERS MEMORAMA
-========================= */
-function stopMemoryTimer() {
-  if (memoryTimerInterval) {
-    clearInterval(memoryTimerInterval);
-    memoryTimerInterval = null;
+function normalizeText(text) {
+  return text
+    .toUpperCase()
+    .trim()
+    .replace(/[^A-ZÁÉÍÓÚÜÑ\s]/g, "");
+}
+
+function sanitizeFileName(text) {
+  return text
+    .toLowerCase()
+    .replace(/á/g, "a")
+    .replace(/é/g, "e")
+    .replace(/í/g, "i")
+    .replace(/ó/g, "o")
+    .replace(/ú/g, "u")
+    .replace(/ñ/g, "n")
+    .replace(/\s+/g, "_");
+}
+
+function tokenizeLESHO(word) {
+  const text = normalizeText(word).replace(/\s+/g, "");
+  const tokens = [];
+  let i = 0;
+
+  while (i < text.length) {
+    const twoChars = text.substring(i, i + 2);
+
+    if (["CH", "LL", "RR"].includes(twoChars)) {
+      tokens.push(twoChars);
+      i += 2;
+    } else {
+      const char = text[i];
+      const normalizedChar = char
+        .replace("Á", "A")
+        .replace("É", "E")
+        .replace("Í", "I")
+        .replace("Ó", "O")
+        .replace("Ú", "U")
+        .replace("Ü", "U");
+
+      tokens.push(normalizedChar);
+      i += 1;
+    }
   }
+
+  return tokens;
 }
 
-function resetMemoryFeedback() {
-  memoryFeedback.textContent = "";
-  memoryFeedback.className = "feedback-message";
+function findSign(token) {
+  return signData.find(item => item.letter === token);
 }
 
-function updateMemoryStats() {
-  memoryMovesValue.textContent = memoryMoves;
-  memoryPairsValue.textContent = memoryPairsFound;
-  memoryTimerValue.textContent = memorySeconds;
-}
+function renderResults(word) {
+  const cleanedWord = normalizeText(word);
+  const tokens = tokenizeLESHO(cleanedWord);
 
-/* =========================
-   HELPERS WORD
-========================= */
-function resetWordFeedback() {
-  wordFeedback.textContent = "";
-  wordFeedback.className = "feedback-message";
-}
-
-function updateWordStats() {
-  wordScoreValue.textContent = wordScore;
-  wordRoundValue.textContent = wordRound;
-  wordCorrectValue.textContent = wordCorrect;
-}
-
-function renderWordAnswer() {
-  wordAnswerDisplay.innerHTML = "";
-
-  if (!currentWordAnswer.length) {
-    const placeholder = document.createElement("div");
-    placeholder.className = "word-answer-placeholder";
-    placeholder.textContent = "Selecciona las señas en orden";
-    wordAnswerDisplay.appendChild(placeholder);
+  if (!tokens.length) {
+    showEmpty();
+    lastTranslatedWord = "";
     return;
   }
 
-  currentWordAnswer.forEach(letter => {
-    const letterData = getLetterData(letter);
-    if (!letterData) return;
+  lastTranslatedWord = cleanedWord;
+  saveToHistory(cleanedWord);
 
-    const chip = document.createElement("div");
-    chip.className = "word-answer-chip";
-    chip.innerHTML = `
-      <img src="${letterData.image}" alt="Seña ${letterData.letter}">
-      <span>${letterData.letter}</span>
-    `;
-    wordAnswerDisplay.appendChild(chip);
-  });
-}
+  const exportHeader = `
+    <div class="export-header">
+      <div class="export-badge">🇭🇳 LESHO • Lenguaje de Señas Hondureño</div>
+      <h3>Palabra: ${cleanedWord}</h3>
+      <p>Resultado del deletreo en el abecedario LESHO</p>
+    </div>
+  `;
 
-/* =========================
-   HELPERS RUSH
-========================= */
-function resetRushFeedback() {
-  rushFeedback.textContent = "";
-  rushFeedback.className = "feedback-message";
-}
+  const cards = tokens.map((token, index) => {
+    const sign = findSign(token);
 
-function updateRushStats() {
-  rushScoreValue.textContent = rushScore;
-  rushCorrectValue.textContent = rushCorrect;
-  rushTimerValue.textContent = rushTimeLeft;
-}
-
-function stopRushTimer() {
-  if (rushTimerInterval) {
-    clearInterval(rushTimerInterval);
-    rushTimerInterval = null;
-  }
-}
-
-/* =========================
-   MENÚ / NAV
-========================= */
-function goToMenu() {
-  stopAllTimers();
-  resetFeedback();
-  resetMemoryFeedback();
-  resetWordFeedback();
-  resetRushFeedback();
-  showScreen(menuScreen);
-}
-
-function openQuizIntro() {
-  stopAllTimers();
-  resetFeedback();
-  showScreen(startScreen);
-}
-
-function openMemoryIntro() {
-  stopAllTimers();
-  resetMemoryFeedback();
-  showScreen(memoryStartScreen);
-}
-
-function openWordIntro() {
-  stopAllTimers();
-  resetWordFeedback();
-  showScreen(wordStartScreen);
-}
-
-function openRushIntro() {
-  stopAllTimers();
-  resetRushFeedback();
-  showScreen(rushStartScreen);
-}
-
-/* =========================
-   QUIZ
-========================= */
-function startGame() {
-  currentRound = 1;
-  score = 0;
-  streak = 0;
-  bestStreak = 0;
-  gamePool = shuffleArray(quizData).slice(0, TOTAL_ROUNDS);
-
-  resetFeedback();
-  showScreen(gameScreen);
-  loadQuestion();
-}
-
-function loadQuestion() {
-  stopTimer();
-  isAnswered = false;
-  resetFeedback();
-
-  if (currentRound > TOTAL_ROUNDS) {
-    endGame();
-    return;
-  }
-
-  currentQuestion = gamePool[currentRound - 1];
-  questionImage.src = currentQuestion.image;
-  questionImage.alt = `Seña de la letra ${currentQuestion.letter}`;
-
-  timeLeft = TIME_PER_ROUND;
-  updateStats();
-
-  renderOptions();
-  startTimer();
-}
-
-function renderOptions() {
-  optionsContainer.innerHTML = "";
-
-  const correctLetter = currentQuestion.letter;
-  const wrongOptions = quizData
-    .filter(item => item.letter !== correctLetter)
-    .map(item => item.letter);
-
-  const shuffledWrong = shuffleArray(wrongOptions).slice(0, 3);
-  const allOptions = shuffleArray([correctLetter, ...shuffledWrong]);
-
-  allOptions.forEach(option => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = option;
-    btn.addEventListener("click", () => handleAnswer(option, btn));
-    optionsContainer.appendChild(btn);
-  });
-}
-
-function startTimer() {
-  timerValue.textContent = timeLeft;
-
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timerValue.textContent = timeLeft;
-
-    if (timeLeft <= 0) {
-      stopTimer();
-      handleTimeOut();
-    }
-  }, 1000);
-}
-
-function disableAllOptions() {
-  const buttons = optionsContainer.querySelectorAll(".option-btn");
-  buttons.forEach(btn => btn.disabled = true);
-}
-
-function markCorrectOption() {
-  const buttons = optionsContainer.querySelectorAll(".option-btn");
-  buttons.forEach(btn => {
-    if (btn.textContent === currentQuestion.letter) {
-      btn.classList.add("correct");
-    }
-  });
-}
-
-function handleAnswer(selectedOption, selectedButton) {
-  if (isAnswered) return;
-
-  isAnswered = true;
-  stopTimer();
-  disableAllOptions();
-
-  const isCorrect = selectedOption === currentQuestion.letter;
-
-  if (isCorrect) {
-    score += 10;
-    streak += 1;
-    if (streak > bestStreak) bestStreak = streak;
-
-    selectedButton.classList.add("correct");
-    feedbackMessage.textContent = "✅ ¡Correcto!";
-    feedbackMessage.className = "feedback-message success";
-  } else {
-    streak = 0;
-    selectedButton.classList.add("wrong");
-    markCorrectOption();
-
-    feedbackMessage.textContent = `❌ Incorrecto. Era: ${currentQuestion.letter}`;
-    feedbackMessage.className = "feedback-message error";
-  }
-
-  updateStats();
-
-  setTimeout(() => {
-    currentRound++;
-    loadQuestion();
-  }, 1400);
-}
-
-function handleTimeOut() {
-  if (isAnswered) return;
-
-  isAnswered = true;
-  streak = 0;
-  disableAllOptions();
-  markCorrectOption();
-
-  feedbackMessage.textContent = `⏰ Tiempo agotado. Era: ${currentQuestion.letter}`;
-  feedbackMessage.className = "feedback-message error";
-
-  updateStats();
-
-  setTimeout(() => {
-    currentRound++;
-    loadQuestion();
-  }, 1500);
-}
-
-function endGame() {
-  stopTimer();
-
-  finalScore.textContent = score;
-  finalStreak.textContent = bestStreak;
-
-  if (score >= 90) {
-    finalMessage.textContent = "🔥 ¡Increíble! Ya casi dominas el abecedario LESHO.";
-  } else if (score >= 60) {
-    finalMessage.textContent = "💙 ¡Muy bien! Vas avanzando excelente, sigue practicando.";
-  } else if (score >= 30) {
-    finalMessage.textContent = "✨ Buen intento. Con unas rondas más lo dominarás.";
-  } else {
-    finalMessage.textContent = "📘 Sigue practicando. Cada partida te hará mejorar.";
-  }
-
-  showScreen(endScreen);
-}
-
-/* =========================
-   MEMORAMA
-========================= */
-function startMemoryGame() {
-  stopAllTimers();
-
-  memoryFirstCard = null;
-  memorySecondCard = null;
-  memoryLock = false;
-  memoryMoves = 0;
-  memoryPairsFound = 0;
-  memorySeconds = 0;
-
-  resetMemoryFeedback();
-
-  buildMemoryDeck();
-  renderMemoryBoard();
-  updateMemoryStats();
-  showScreen(memoryGameScreen);
-  startMemoryTimer();
-}
-
-function buildMemoryDeck() {
-  const selectedPairs = shuffleArray(quizData).slice(0, MEMORY_PAIRS);
-  const deck = [];
-
-  selectedPairs.forEach((item, index) => {
-    const pairId = `pair-${index}-${item.letter}`;
-
-    deck.push({
-      id: `${pairId}-img`,
-      pairId,
-      type: "image",
-      letter: item.letter,
-      image: item.image,
-      matched: false
-    });
-
-    deck.push({
-      id: `${pairId}-txt`,
-      pairId,
-      type: "text",
-      letter: item.letter,
-      image: item.image,
-      matched: false
-    });
-  });
-
-  memoryDeck = shuffleArray(deck);
-}
-
-function renderMemoryBoard() {
-  memoryBoard.innerHTML = "";
-
-  memoryDeck.forEach(card => {
-    const cardButton = document.createElement("button");
-    cardButton.className = "memory-card";
-    cardButton.dataset.id = card.id;
-
-    cardButton.innerHTML = `
-      <div class="memory-card-inner">
-        <div class="memory-face memory-front">
-          <span class="memory-front-symbol">💙</span>
+    if (!sign) {
+      return `
+        <div class="sign-card">
+          <div class="card-top">
+            <div class="card-letter">${token}</div>
+            <div class="card-type">Seña no encontrada</div>
+          </div>
+          <div class="card-body">
+            <p>No existe información cargada para ${token}.</p>
+          </div>
         </div>
+      `;
+    }
 
-        <div class="memory-face memory-back">
-          ${
-            card.type === "image"
-              ? `
-                <div class="memory-image-card">
-                  <div class="memory-image-label">Seña</div>
-                  <div class="memory-image-wrap">
-                    <img src="${card.image}" alt="Seña de la letra ${card.letter}" />
-                  </div>
-                </div>
-              `
-              : `
-                <div class="memory-text-card">${card.letter}</div>
-              `
-          }
+    return `
+      <div class="sign-card">
+        <div class="card-top">
+          <div class="card-letter">${sign.letter}</div>
+          <div class="card-type">Posición #${index + 1} en la palabra</div>
+        </div>
+        <div class="card-body">
+          <p>${sign.description}</p>
+          <img 
+            src="${sign.image}" 
+            alt="Seña ${sign.letter}" 
+            class="zoomable-image"
+            data-src="${sign.image}"
+            data-caption="Seña ${sign.letter} • Posición #${index + 1}"
+          />
         </div>
       </div>
     `;
+  });
 
-    cardButton.addEventListener("click", () => handleMemoryCardClick(card, cardButton));
-    memoryBoard.appendChild(cardButton);
+  const exportFooter = `
+    <div class="export-footer">
+      <p>✨ Hecho con cariño en Honduras por Abner & ChatGPT</p>
+    </div>
+  `;
+
+  resultContainer.innerHTML = exportHeader + cards.join("") + exportFooter;
+  resultCount.textContent = `${tokens.length} seña${tokens.length !== 1 ? "s" : ""}`;
+  renderHistory();
+  bindImageZoom();
+}
+
+function bindImageZoom() {
+  const images = document.querySelectorAll(".zoomable-image");
+
+  images.forEach(img => {
+    img.addEventListener("click", () => {
+      openModal(img.dataset.src, img.dataset.caption);
+    });
   });
 }
 
-function startMemoryTimer() {
-  memoryTimerInterval = setInterval(() => {
-    memorySeconds++;
-    updateMemoryStats();
-  }, 1000);
+function openModal(src, caption) {
+  modalImage.src = src;
+  modalCaption.textContent = caption;
+  imageModal.classList.remove("hidden");
+  document.body.style.overflow = "hidden";
 }
 
-function handleMemoryCardClick(card, cardElement) {
-  if (memoryLock) return;
-  if (card.matched) return;
-  if (cardElement.classList.contains("flipped")) return;
+function closeModal() {
+  imageModal.classList.add("hidden");
+  modalImage.src = "";
+  modalCaption.textContent = "";
+  document.body.style.overflow = "";
+}
 
-  cardElement.classList.add("flipped");
+function showEmpty() {
+  resultContainer.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">✋</div>
+      <p>Escribe una palabra para ver sus señas en LESHO.</p>
+    </div>
+  `;
+  resultCount.textContent = "0 señas";
+}
 
-  if (!memoryFirstCard) {
-    memoryFirstCard = { data: card, element: cardElement };
+function showError(message) {
+  resultContainer.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">⚠️</div>
+      <p>${message}</p>
+    </div>
+  `;
+  resultCount.textContent = "Error";
+}
+
+function handleTranslate() {
+  const value = wordInput.value;
+  if (!value.trim()) {
+    showEmpty();
+    lastTranslatedWord = "";
     return;
   }
-
-  memorySecondCard = { data: card, element: cardElement };
-  memoryMoves++;
-  updateMemoryStats();
-
-  checkMemoryMatch();
+  renderResults(value);
 }
 
-function checkMemoryMatch() {
-  if (!memoryFirstCard || !memorySecondCard) return;
+function handleClear() {
+  wordInput.value = "";
+  showEmpty();
+  lastTranslatedWord = "";
+  wordInput.focus();
+}
 
-  const isMatch = memoryFirstCard.data.pairId === memorySecondCard.data.pairId;
-
-  if (isMatch) {
-    memoryFirstCard.data.matched = true;
-    memorySecondCard.data.matched = true;
-
-    memoryFirstCard.element.classList.add("matched");
-    memorySecondCard.element.classList.add("matched");
-
-    memoryPairsFound++;
-    updateMemoryStats();
-
-    memoryFeedback.textContent = "✅ ¡Pareja correcta!";
-    memoryFeedback.className = "feedback-message success";
-
-    resetMemorySelection();
-
-    if (memoryPairsFound === MEMORY_PAIRS) {
-      setTimeout(() => endMemoryGame(), 500);
-    }
-  } else {
-    memoryLock = true;
-
-    memoryFeedback.textContent = "❌ No coinciden";
-    memoryFeedback.className = "feedback-message error";
-
-    setTimeout(() => {
-      memoryFirstCard.element.classList.remove("flipped");
-      memorySecondCard.element.classList.remove("flipped");
-
-      resetMemorySelection();
-      memoryLock = false;
-    }, 900);
+function getStoredArray(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) || [];
+  } catch {
+    return [];
   }
 }
 
-function resetMemorySelection() {
-  memoryFirstCard = null;
-  memorySecondCard = null;
+function setStoredArray(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
-function endMemoryGame() {
-  stopMemoryTimer();
+function saveToHistory(word) {
+  let history = getStoredArray(STORAGE_KEYS.history);
+  history = history.filter(item => item !== word);
+  history.unshift(word);
+  history = history.slice(0, 8);
+  setStoredArray(STORAGE_KEYS.history, history);
+}
 
-  memoryFinalMoves.textContent = memoryMoves;
-  memoryFinalTime.textContent = `${memorySeconds}s`;
+function saveFavorite() {
+  const value = normalizeText(wordInput.value);
+  if (!value) return;
 
-  if (memoryMoves <= 10) {
-    memoryFinalMessage.textContent = "🔥 ¡Memoria legendaria! Lo hiciste excelente.";
-  } else if (memoryMoves <= 16) {
-    memoryFinalMessage.textContent = "💙 ¡Muy bien! Tienes muy buena memoria.";
-  } else if (memoryMoves <= 24) {
-    memoryFinalMessage.textContent = "✨ Buen trabajo. Cada vez lo harás más rápido.";
-  } else {
-    memoryFinalMessage.textContent = "📘 Lo lograste. Sigue practicando para mejorar tu tiempo.";
+  let favorites = getStoredArray(STORAGE_KEYS.favorites);
+
+  if (!favorites.includes(value)) {
+    favorites.unshift(value);
+    favorites = favorites.slice(0, 12);
+    setStoredArray(STORAGE_KEYS.favorites, favorites);
+    renderFavorites();
   }
-
-  showScreen(memoryEndScreen);
 }
 
-/* =========================
-   ESCRIBE LA PALABRA CON SEÑAS
-========================= */
-function startWordGame() {
-  stopAllTimers();
-
-  wordGameWords = shuffleArray(wordBank).slice(0, WORD_ROUNDS);
-  wordRound = 1;
-  wordScore = 0;
-  wordCorrect = 0;
-
-  resetWordFeedback();
-  showScreen(wordGameScreen);
-  loadWordRound();
+function clearFavorites() {
+  localStorage.removeItem(STORAGE_KEYS.favorites);
+  renderFavorites();
 }
 
-function loadWordRound() {
-  resetWordFeedback();
-
-  if (wordRound > WORD_ROUNDS) {
-    endWordGame();
-    return;
-  }
-
-  currentWord = wordGameWords[wordRound - 1].toUpperCase();
-  currentWordAnswer = [];
-  wordSelectedButtons = [];
-
-  wordTargetDisplay.textContent = currentWord;
-  updateWordStats();
-  renderWordAnswer();
-  renderWordLetterPool();
+function clearHistory() {
+  localStorage.removeItem(STORAGE_KEYS.history);
+  renderHistory();
 }
 
-function renderWordLetterPool() {
-  wordLetterPool.innerHTML = "";
+function renderFavorites() {
+  const favorites = getStoredArray(STORAGE_KEYS.favorites);
 
-  const letters = currentWord.split("");
-  const allLetters = [...letters];
-
-  while (allLetters.length < Math.max(8, currentWord.length + 2)) {
-    const randomLetter = quizData[Math.floor(Math.random() * quizData.length)].letter;
-    if (randomLetter.length === 1 && randomLetter !== "Ñ") {
-      allLetters.push(randomLetter);
-    }
-  }
-
-  const shuffled = shuffleArray(allLetters);
-
-  shuffled.forEach(letter => {
-    const letterData = getLetterData(letter);
-    if (!letterData) return;
-
-    const btn = document.createElement("button");
-    btn.className = "word-sign-btn";
-
-    btn.innerHTML = `
-      <img src="${letterData.image}" alt="Seña ${letterData.letter}">
-      <div class="word-sign-label">${letterData.letter}</div>
+  if (!favorites.length) {
+    favoritesContainer.innerHTML = `
+      <div class="empty-state">
+        <p>No hay favoritas guardadas todavía.</p>
+      </div>
     `;
+    return;
+  }
 
+  favoritesContainer.innerHTML = favorites
+    .map(word => `<button class="panel-item" data-word="${word}">⭐ ${word}</button>`)
+    .join("");
+
+  favoritesContainer.querySelectorAll(".panel-item").forEach(btn => {
     btn.addEventListener("click", () => {
-      if (currentWordAnswer.length >= currentWord.length) return;
+      wordInput.value = btn.dataset.word;
+      handleTranslate();
+    });
+  });
+}
 
-      currentWordAnswer.push(letter);
-      btn.disabled = true;
-      wordSelectedButtons.push(btn);
+function renderHistory() {
+  const history = getStoredArray(STORAGE_KEYS.history);
 
-      renderWordAnswer();
+  if (!history.length) {
+    historyContainer.innerHTML = `
+      <div class="empty-state">
+        <p>No hay historial todavía.</p>
+      </div>
+    `;
+    return;
+  }
+
+  historyContainer.innerHTML = history
+    .map(word => `<button class="panel-item" data-word="${word}">🕘 ${word}</button>`)
+    .join("");
+
+  historyContainer.querySelectorAll(".panel-item").forEach(btn => {
+    btn.addEventListener("click", () => {
+      wordInput.value = btn.dataset.word;
+      handleTranslate();
+    });
+  });
+}
+
+function renderQuickWords() {
+  quickWordsContainer.innerHTML = quickWords
+    .map(word => `<button class="chip" data-word="${word}">${word}</button>`)
+    .join("");
+
+  quickWordsContainer.querySelectorAll(".chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      wordInput.value = btn.dataset.word;
+      handleTranslate();
+    });
+  });
+}
+
+function renderKeyboard() {
+  keyboardContainer.innerHTML = keyboardLetters
+    .map(letter => `<button class="key-btn" data-letter="${letter}">${letter}</button>`)
+    .join("");
+
+  keyboardContainer.querySelectorAll(".key-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const current = wordInput.value.trim();
+      wordInput.value = current + btn.dataset.letter;
+      wordInput.focus();
+    });
+  });
+}
+
+async function downloadResultAsImage() {
+  if (!lastTranslatedWord) {
+    alert("Primero traduce una palabra antes de descargar.");
+    return;
+  }
+
+  const originalText = downloadBtn.textContent;
+  downloadBtn.disabled = true;
+  downloadBtn.textContent = "⏳ Generando imagen...";
+
+  try {
+    const canvas = await html2canvas(exportArea, {
+      backgroundColor: "#0b1220",
+      scale: 2,
+      useCORS: true,
+      logging: false,
+      scrollX: 0,
+      scrollY: -window.scrollY
     });
 
-    wordLetterPool.appendChild(btn);
+    const link = document.createElement("a");
+    link.download = `lesho_${sanitizeFileName(lastTranslatedWord)}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  } catch (error) {
+    console.error("Error generando imagen:", error);
+    alert("No se pudo generar la imagen. Verifica que las imágenes carguen correctamente.");
+  } finally {
+    downloadBtn.disabled = false;
+    downloadBtn.textContent = originalText;
+  }
+}
+
+translateBtn.addEventListener("click", handleTranslate);
+clearBtn.addEventListener("click", handleClear);
+favoriteBtn.addEventListener("click", saveFavorite);
+clearFavoritesBtn.addEventListener("click", clearFavorites);
+clearHistoryBtn.addEventListener("click", clearHistory);
+downloadBtn.addEventListener("click", downloadResultAsImage);
+
+wordInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    handleTranslate();
+  }
+
+  if (e.key === "Escape") {
+    closeModal();
+  }
+});
+
+closeModalBtn.addEventListener("click", closeModal);
+modalOverlay.addEventListener("click", closeModal);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    closeModal();
+  }
+});
+
+loadData();
+// Registrar Service Worker para PWA
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js")
+      .then((registration) => {
+        console.log("Service Worker registrado:", registration.scope);
+      })
+      .catch((error) => {
+        console.error("Error registrando Service Worker:", error);
+      });
   });
 }
-
-function clearWordAnswer() {
-  currentWordAnswer = [];
-  wordSelectedButtons.forEach(btn => (btn.disabled = false));
-  wordSelectedButtons = [];
-  renderWordAnswer();
-  resetWordFeedback();
-}
-
-function checkWordAnswer() {
-  if (currentWordAnswer.length !== currentWord.length) {
-    wordFeedback.textContent = "⚠️ Completa la palabra primero.";
-    wordFeedback.className = "feedback-message error";
-    return;
-  }
-
-  const answerString = currentWordAnswer.join("");
-
-  if (answerString === currentWord) {
-    wordScore += 20;
-    wordCorrect += 1;
-
-    wordFeedback.textContent = "✅ ¡Correcto!";
-    wordFeedback.className = "feedback-message success";
-  } else {
-    wordFeedback.textContent = `❌ Incorrecto. Era: ${currentWord}`;
-    wordFeedback.className = "feedback-message error";
-  }
-
-  updateWordStats();
-
-  setTimeout(() => {
-    wordRound++;
-    loadWordRound();
-  }, 1400);
-}
-
-function endWordGame() {
-  wordFinalScore.textContent = wordScore;
-  wordFinalCorrect.textContent = wordCorrect;
-
-  if (wordCorrect === 5) {
-    wordFinalMessage.textContent = "🔥 ¡Perfecto! Dominaste todas las palabras en señas.";
-  } else if (wordCorrect >= 3) {
-    wordFinalMessage.textContent = "💙 ¡Muy bien! Vas excelente formando palabras en LESHO.";
-  } else {
-    wordFinalMessage.textContent = "📘 Buen intento. Sigue practicando para mejorar.";
-  }
-
-  showScreen(wordEndScreen);
-}
-
-/* =========================
-   MODO RÁPIDO
-========================= */
-function startRushGame() {
-  stopAllTimers();
-
-  rushScore = 0;
-  rushCorrect = 0;
-
-  resetRushFeedback();
-  showScreen(rushGameScreen);
-  loadRushQuestion();
-}
-
-function loadRushQuestion() {
-  stopRushTimer();
-  rushAnswered = false;
-  resetRushFeedback();
-
-  rushQuestion = quizData[Math.floor(Math.random() * quizData.length)];
-  rushQuestionImage.src = rushQuestion.image;
-  rushQuestionImage.alt = `Seña de la letra ${rushQuestion.letter}`;
-
-  rushTimeLeft = RUSH_TIME;
-  updateRushStats();
-  renderRushOptions();
-  startRushTimer();
-}
-
-function renderRushOptions() {
-  rushOptionsContainer.innerHTML = "";
-
-  const correctLetter = rushQuestion.letter;
-  const wrongOptions = quizData
-    .filter(item => item.letter !== correctLetter)
-    .map(item => item.letter);
-
-  const shuffledWrong = shuffleArray(wrongOptions).slice(0, 3);
-  const allOptions = shuffleArray([correctLetter, ...shuffledWrong]);
-
-  allOptions.forEach(option => {
-    const btn = document.createElement("button");
-    btn.className = "option-btn";
-    btn.textContent = option;
-    btn.addEventListener("click", () => handleRushAnswer(option, btn));
-    rushOptionsContainer.appendChild(btn);
-  });
-}
-
-function startRushTimer() {
-  rushTimerValue.textContent = rushTimeLeft;
-
-  rushTimerInterval = setInterval(() => {
-    rushTimeLeft--;
-    rushTimerValue.textContent = rushTimeLeft;
-
-    if (rushTimeLeft <= 0) {
-      stopRushTimer();
-      endRushGame("⏰ Se acabó el tiempo.");
-    }
-  }, 1000);
-}
-
-function disableRushOptions() {
-  const buttons = rushOptionsContainer.querySelectorAll(".option-btn");
-  buttons.forEach(btn => (btn.disabled = true));
-}
-
-function markRushCorrect() {
-  const buttons = rushOptionsContainer.querySelectorAll(".option-btn");
-  buttons.forEach(btn => {
-    if (btn.textContent === rushQuestion.letter) {
-      btn.classList.add("correct");
-    }
-  });
-}
-
-function handleRushAnswer(selectedOption, selectedButton) {
-  if (rushAnswered) return;
-
-  rushAnswered = true;
-  stopRushTimer();
-  disableRushOptions();
-
-  const isCorrect = selectedOption === rushQuestion.letter;
-
-  if (isCorrect) {
-    rushScore += 10;
-    rushCorrect += 1;
-
-    selectedButton.classList.add("correct");
-    rushFeedback.textContent = "✅ ¡Correcto!";
-    rushFeedback.className = "feedback-message success";
-
-    updateRushStats();
-
-    setTimeout(() => {
-      loadRushQuestion();
-    }, 700);
-  } else {
-    selectedButton.classList.add("wrong");
-    markRushCorrect();
-
-    rushFeedback.textContent = `❌ Incorrecto. Era: ${rushQuestion.letter}`;
-    rushFeedback.className = "feedback-message error";
-
-    updateRushStats();
-
-    setTimeout(() => {
-      endRushGame("❌ Fallaste una respuesta.");
-    }, 900);
-  }
-}
-
-function endRushGame(reason = "") {
-  stopRushTimer();
-
-  rushFinalScore.textContent = rushScore;
-  rushFinalCorrect.textContent = rushCorrect;
-
-  if (rushCorrect >= 10) {
-    rushFinalMessage.textContent = `🔥 ¡Brutal! ${reason} Récord increíble.`;
-  } else if (rushCorrect >= 5) {
-    rushFinalMessage.textContent = `💙 ¡Muy bien! ${reason}`;
-  } else {
-    rushFinalMessage.textContent = `${reason} Sigue practicando para mejorar tu velocidad.`;
-  }
-
-  showScreen(rushEndScreen);
-}
-
-/* =========================
-   EVENTOS
-========================= */
-openQuizBtn.addEventListener("click", openQuizIntro);
-openMemoryBtn.addEventListener("click", openMemoryIntro);
-openWordBtn.addEventListener("click", openWordIntro);
-openRushBtn.addEventListener("click", openRushIntro);
-
-[
-  backToMenuFromStart,
-  backToMenuFromGame,
-  backToMenuFromEnd,
-  backToMenuFromMemoryStart,
-  backToMenuFromMemoryGame,
-  backToMenuFromMemoryEnd,
-  backToMenuFromWordStart,
-  backToMenuFromWordGame,
-  backToMenuFromWordEnd,
-  backToMenuFromRushStart,
-  backToMenuFromRushGame,
-  backToMenuFromRushEnd
-].forEach(btn => btn.addEventListener("click", goToMenu));
-
-startBtn.addEventListener("click", startGame);
-restartBtn.addEventListener("click", startGame);
-
-startMemoryBtn.addEventListener("click", startMemoryGame);
-restartMemoryBtn.addEventListener("click", startMemoryGame);
-
-startWordBtn.addEventListener("click", startWordGame);
-restartWordBtn.addEventListener("click", startWordGame);
-wordClearBtn.addEventListener("click", clearWordAnswer);
-wordCheckBtn.addEventListener("click", checkWordAnswer);
-
-startRushBtn.addEventListener("click", startRushGame);
-restartRushBtn.addEventListener("click", startRushGame);
-
-/* =========================
-   INIT
-========================= */
-goToMenu();
